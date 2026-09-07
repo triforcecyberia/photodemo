@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark" data-shape="soft" data-font="editorial">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ФОКУС — фотостудия в центре города</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+/* ============ TOKENS ============ */
+:root{
+  --bg:#15141a; --surface:#1e1d24; --surface-2:#26242c; --border:#302e38;
+  --text:#f3f1ec; --text-muted:#9b98a3;
+  --accent:#e8a33d; --accent-ink:#15141a;
+  --radius-btn:10px; --radius-card:16px; --radius-chip:14px;
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-body:'Instrument Sans',-apple-system,'Segoe UI',sans-serif;
+  --container:1180px;
+  --shadow-1: 0 1px 0 rgba(0,0,0,.4);
+}
+html[data-theme="light"]{
+  --bg:#f3f1ec; --surface:#ffffff; --surface-2:#ece8df; --border:#e0dcd0;
+  --text:#17161b; --text-muted:#6b6860;
+  --shadow-1: 0 1px 0 rgba(0,0,0,.05);
+}
+html[data-shape="sharp"]{ --radius-btn:2px; --radius-card:2px; --radius-chip:2px; }
+html[data-shape="soft"]{ --radius-btn:10px; --radius-card:16px; --radius-chip:14px; }
+html[data-shape="pill"]{ --radius-btn:999px; --radius-card:26px; --radius-chip:26px; }
+
+html[data-font="editorial"]{ --font-display:'Instrument Serif',Georgia,serif; --font-body:'Instrument Sans',-apple-system,'Segoe UI',sans-serif; }
+html[data-font="modern"]{ --font-display:'Bricolage Grotesque','Segoe UI',sans-serif; --font-body:'Manrope',-apple-system,'Segoe UI',sans-serif; }
+html[data-font="classic"]{ --font-display:'Newsreader',Georgia,serif; --font-body:'Work Sans','Segoe UI',sans-serif; }
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased;
+  transition:background .25s ease,color .25s ease;
+}
+a{color:inherit;}
+img,svg{display:block; max-width:100%;}
+.container{max-width:var(--container); margin:0 auto; padding:0 28px;}
+h1,h2,h3{font-family:var(--font-display); font-weight:600; line-height:1.1; margin:0;}
+p{margin:0;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--font-body); font-weight:600; font-size:15px;
+  padding:13px 26px; border-radius:var(--radius-btn); border:1px solid transparent;
+  cursor:pointer; text-decoration:none; white-space:nowrap;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+}
+.btn:active{ transform:scale(.97); }
+.btn--primary{ background:var(--accent); color:var(--accent-ink); }
+.btn--primary:hover{ opacity:.9; }
+.btn--outline{ background:transparent; color:var(--text); border-color:var(--border); }
+.btn--outline:hover{ border-color:var(--accent); }
+.btn--sm{ padding:9px 16px; font-size:13px; }
+
+/* ============ TOP BAR ============ */
+.topbar{
+  background:var(--surface-2); border-bottom:1px solid var(--border);
+  font-size:13.5px; color:var(--text-muted);
+}
+.topbar .container{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:10px; padding-bottom:10px; }
+.topbar strong{ color:var(--text); font-weight:600; }
+.topbar-close{ background:none; border:none; color:var(--text-muted); font-size:18px; line-height:1; cursor:pointer; padding:2px 4px; }
+
+/* ============ HEADER ============ */
+header{
+  position:sticky; top:0; z-index:40; background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:18px 0; gap:20px; }
+.logo{ font-family:var(--font-display); font-size:22px; font-weight:700; letter-spacing:.02em; }
+.logo span{ color:var(--accent); }
+.nav-links{ display:flex; gap:30px; list-style:none; margin:0; padding:0; font-size:14.5px; }
+.nav-links a{ text-decoration:none; color:var(--text-muted); transition:color .15s ease; }
+.nav-links a:hover{ color:var(--text); }
+.nav-actions{ display:flex; align-items:center; gap:10px; }
+.nav-menu-toggle{ display:none; background:none; border:1px solid var(--border); color:var(--text); border-radius:var(--radius-btn); padding:9px 14px; font-size:14px; cursor:pointer; }
+
+@media (max-width:860px){
+  .nav-links{ display:none; }
+  .nav-menu-toggle{ display:inline-flex; }
+  .nav-links.mobile-open{
+    display:flex; flex-direction:column; gap:0; position:absolute; left:0; right:0; top:100%;
+    background:var(--bg); border-bottom:1px solid var(--border); padding:6px 28px 18px;
+  }
+  .nav-links.mobile-open a{ padding:12px 0; border-bottom:1px solid var(--border); }
+  .btn--outline.hide-mobile{ display:none; }
+}
+
+/* ============ HERO ============ */
+.hero{ position:relative; overflow:hidden; padding:80px 0 96px; }
+.hero-glow{
+  position:absolute; inset:-20% -10% auto -10%; height:70%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  pointer-events:none; transition:background .3s ease;
+}
+.hero-grid{ position:relative; display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center; }
+@media (max-width:920px){ .hero-grid{ grid-template-columns:1fr; } }
+
+.hero h1{ font-size:clamp(34px,5vw,56px); max-width:14ch; }
+.hero-sub{ margin-top:22px; max-width:46ch; color:var(--text-muted); font-size:17px; }
+.hero-cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+.hero-stats{ display:flex; gap:36px; margin-top:52px; flex-wrap:wrap; }
+.hero-stats div b{ display:block; font-family:var(--font-display); font-size:26px; font-weight:600; }
+.hero-stats div span{ font-size:13px; color:var(--text-muted); }
+
+.lightbox-table{ position:relative; height:420px; }
+.chip{
+  position:absolute; width:190px; height:140px; border-radius:var(--radius-chip);
+  border:1px solid rgba(255,255,255,.08); box-shadow:0 18px 34px rgba(0,0,0,.35);
+  padding:12px; display:flex; align-items:flex-end;
+  font-size:12.5px; font-weight:600; color:#fff; overflow:hidden;
+}
+.chip span{ background:rgba(0,0,0,.35); padding:4px 9px; border-radius:6px; backdrop-filter:blur(2px); }
+.chip--1{ background:linear-gradient(135deg,#5b4636,#2c2118); top:10px; left:8%; transform:rotate(-7deg); z-index:2;}
+.chip--2{ background:linear-gradient(135deg,#3a3d46,#181a20); top:48px; left:38%; transform:rotate(4deg); z-index:3;}
+.chip--3{ background:linear-gradient(135deg,#6d4a5e,#2a1d27); top:150px; left:6%; transform:rotate(3deg); z-index:1;}
+.chip--4{ background:linear-gradient(135deg,#3d5a52,#182420); top:190px; left:44%; transform:rotate(-5deg); z-index:2;}
+.chip--5{ background:linear-gradient(135deg,#4a3f63,#1c1826); top:270px; left:20%; transform:rotate(8deg); z-index:4;}
+@media (max-width:920px){ .lightbox-table{ height:300px; } .chip{ width:150px; height:110px; } }
+@media (max-width:520px){ .lightbox-table{ display:none; } }
+
+/* ============ SECTION SHELL ============ */
+section{ padding:88px 0; border-bottom:1px solid var(--border); }
+.section-head{ max-width:640px; margin-bottom:48px; }
+.section-head h2{ font-size:clamp(26px,3.4vw,36px); }
+.section-head p{ margin-top:14px; color:var(--text-muted); font-size:16px; }
+
+/* ============ ROOMS ============ */
+.rooms-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:920px){ .rooms-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){ .rooms-grid{ grid-template-columns:1fr; } }
+
+.room-card{
+  border:1px solid var(--border); border-radius:var(--radius-card); overflow:hidden;
+  background:var(--surface); transition:border-color .2s ease, transform .2s ease;
+}
+.room-card:hover{ border-color:var(--accent); transform:translateY(-3px); }
+.room-visual{ height:170px; position:relative; }
+.room-visual b{
+  position:absolute; left:14px; bottom:14px; background:rgba(0,0,0,.4); color:#fff;
+  font-size:12px; font-weight:600; padding:5px 10px; border-radius:999px;
+}
+.room-body{ padding:22px; }
+.room-body h3{ font-size:19px; }
+.room-meta{ margin-top:6px; font-size:13.5px; color:var(--accent); font-weight:600; }
+.room-body p{ margin-top:12px; font-size:14.5px; color:var(--text-muted); }
+
+.v-cyclorama{ background:linear-gradient(160deg,#e9e6dd,#c9c6bb); }
+.v-industrial{ background:linear-gradient(160deg,#4b4b4d,#232324); }
+.v-dunes{ background:linear-gradient(160deg,#d8c6a3,#a68a5c); }
+.v-neon{ background:linear-gradient(160deg,#241634,#0d0a16); }
+.v-loft{ background:linear-gradient(160deg,#5a4c3d,#2c241c); }
+.v-vintage{ background:linear-gradient(160deg,#6d5445,#33251c); }
+
+/* ============ EQUIPMENT ============ */
+.equip-wrap{ display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:start; }
+@media (max-width:860px){ .equip-wrap{ grid-template-columns:1fr; } }
+.equip-list{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:520px){ .equip-list{ grid-template-columns:1fr; } }
+.equip-item{ border:1px solid var(--border); border-radius:var(--radius-card); padding:20px; background:var(--surface); }
+.equip-item h4{ font-family:var(--font-body); font-size:15.5px; font-weight:600; margin:0 0 6px; }
+.equip-item p{ font-size:13.5px; color:var(--text-muted); }
+
+/* ============ PRICING ============ */
+.price-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:860px){ .price-grid{ grid-template-columns:1fr; } }
+.price-card{ border:1px solid var(--border); border-radius:var(--radius-card); padding:32px 26px; background:var(--surface); }
+.price-card.is-featured{ border-color:var(--accent); background:var(--surface-2); }
+.price-card h3{ font-size:19px; font-weight:600; font-family:var(--font-body); }
+.price-tag{ font-family:var(--font-display); font-size:32px; margin:16px 0 4px; }
+.price-tag small{ font-size:14px; font-family:var(--font-body); color:var(--text-muted); font-weight:400; }
+.price-card ul{ list-style:none; padding:0; margin:22px 0 0; display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--text-muted); }
+.price-card li:before{ content:"—  "; color:var(--accent); font-weight:700; }
+
+/* ============ SERVICES STRIP ============ */
+.services-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+@media (max-width:860px){ .services-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:520px){ .services-grid{ grid-template-columns:1fr; } }
+.service-chip{ border:1px solid var(--border); border-radius:var(--radius-card); padding:22px; background:var(--surface); }
+.service-chip h4{ font-family:var(--font-body); font-weight:600; font-size:15px; margin:0 0 8px; }
+.service-chip span{ font-size:13.5px; color:var(--accent); font-weight:600; }
+
+/* ============ TESTIMONIALS ============ */
+.quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:860px){ .quotes{ grid-template-columns:1fr; } }
+.quote{ border-left:2px solid var(--accent); padding-left:20px; }
+.quote p{ font-size:15.5px; }
+.quote footer{ margin-top:14px; font-size:13.5px; color:var(--text-muted); }
+
+/* ============ BOOKING ============ */
+.booking{ background:var(--surface-2); }
+.booking-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+@media (max-width:860px){ .booking-wrap{ grid-template-columns:1fr; } }
+.booking-info h2{ font-size:clamp(26px,3.4vw,36px); }
+.booking-info p{ margin-top:16px; color:var(--text-muted); font-size:16px; max-width:42ch; }
+.booking-contacts{ margin-top:28px; display:flex; flex-direction:column; gap:8px; font-size:15px; }
+.booking-contacts b{ font-weight:600; }
+.form{ display:flex; flex-direction:column; gap:14px; }
+.form input, .form select{
+  width:100%; padding:13px 16px; border-radius:var(--radius-btn); border:1px solid var(--border);
+  background:var(--surface); color:var(--text); font-family:var(--font-body); font-size:14.5px;
+}
+.form input:focus, .form select:focus{ border-color:var(--accent); }
+.form-msg{ font-size:13.5px; color:var(--accent); min-height:18px; }
+
+/* ============ FOOTER ============ */
+footer{ padding:56px 0 40px; }
+.footer-grid{ display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; }
+.footer-col h4{ font-size:13.5px; font-weight:600; margin:0 0 14px; color:var(--text-muted); }
+.footer-col a{ display:block; text-decoration:none; color:var(--text); font-size:14.5px; margin-bottom:9px; }
+.footer-bottom{ margin-top:48px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+/* ============ FAB + PANEL ============ */
+.fab{
+  position:fixed; right:26px; bottom:26px; z-index:60;
+  width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
+  background:var(--accent); color:var(--accent-ink); font-size:22px;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px rgba(0,0,0,.35);
+  transition:transform .2s ease;
+}
+.fab:hover{ transform:translateY(-3px) rotate(12deg); }
+
+.overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:70; opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+}
+.overlay.is-open{ opacity:1; pointer-events:auto; }
+
+.panel{
+  position:fixed; top:0; right:0; bottom:0; width:380px; max-width:92vw; z-index:80;
+  background:var(--surface); border-left:1px solid var(--border);
+  transform:translateX(100%); transition:transform .3s ease; overflow-y:auto;
+  font-family:var(--font-body);
+}
+.panel.is-open{ transform:translateX(0); }
+.panel-head{ display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:2;}
+.panel-head h3{ font-family:var(--font-body); font-size:17px; font-weight:700; }
+.panel-close{ background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; padding:4px; }
+.panel-body{ padding:22px 24px 40px; display:flex; flex-direction:column; gap:32px; }
+.panel-section h4{ font-size:13px; text-transform:none; color:var(--text-muted); margin:0 0 14px; font-weight:600; }
+
+.theme-toggle{ display:flex; gap:10px; }
+.opt-btn{
+  flex:1; border:1px solid var(--border); background:var(--bg); color:var(--text);
+  border-radius:var(--radius-btn); padding:11px; font-size:13.5px; cursor:pointer; font-family:var(--font-body);
+  transition:border-color .15s ease;
+}
+.opt-btn.is-active{ border-color:var(--accent); }
+
+.swatches{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.swatch{ width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
+.swatch.is-active{ border-color:var(--text); }
+.swatch-custom{ display:flex; align-items:center; gap:8px; }
+.swatch-custom input[type="color"]{ width:32px; height:32px; border:none; background:none; padding:0; cursor:pointer; border-radius:50%; overflow:hidden; }
+
+.shape-options, .font-options{ display:flex; flex-direction:column; gap:10px; }
+.shape-option, .font-option{
+  display:flex; align-items:center; gap:14px; border:1px solid var(--border); background:var(--bg);
+  border-radius:var(--radius-btn); padding:12px 14px; cursor:pointer; text-align:left; color:var(--text);
+  font-family:var(--font-body); font-size:14px;
+}
+.shape-option.is-active, .font-option.is-active{ border-color:var(--accent); }
+.shape-preview{ width:34px; height:26px; background:var(--accent); flex-shrink:0; }
+.font-preview{ font-size:22px; width:34px; text-align:center; flex-shrink:0; }
+
+.panel-reset{ margin-top:6px; }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP ANNOUNCEMENT BAR ============ -->
+<div class="topbar" id="topbar">
+  <div class="container">
+    <span>Это демо-шаблон для фотостудий. <strong>Все тексты, фото и оформление можно заменить на свои.</strong></span>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button class="btn btn--primary btn--sm" onclick="openPanel()">Настроить сайт</button>
+      <button class="topbar-close" onclick="document.getElementById('topbar').style.display='none'" aria-label="Скрыть">×</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="container nav">
+    <div class="logo">ФОКУС<span>.</span></div>
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#rooms">Залы</a></li>
+        <li><a href="#equipment">Оборудование</a></li>
+        <li><a href="#pricing">Тарифы</a></li>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#booking">Контакты</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn--outline btn--sm hide-mobile" onclick="openPanel()">Редактировать сайт</button>
+      <a href="#booking" class="btn btn--primary btn--sm">Забронировать</a>
+      <button class="nav-menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('mobile-open')">Меню</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" style="border-bottom:1px solid var(--border);">
+  <div class="hero-glow"></div>
+  <div class="container hero-grid">
+    <div>
+      <h1>Свет ставим мы. Кадр — за вами.</h1>
+      <p class="hero-sub">Шесть тематических залов, готовое оборудование и гримёрная в двух шагах от метро. Бронируйте зал на нужный час — без переплат за декор, который не пригодится.</p>
+      <div class="hero-cta">
+        <a href="#booking" class="btn btn--primary">Забронировать зал</a>
+        <a href="#rooms" class="btn btn--outline">Смотреть залы</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>6</b><span>тематических залов</span></div>
+        <div><b>420 м²</b><span>общая площадь</span></div>
+        <div><b>24/7</b><span>доступ по коду</span></div>
+        <div><b>от 1 800 ₽</b><span>час аренды</span></div>
+      </div>
+    </div>
+    <div class="lightbox-table" aria-hidden="true">
+      <div class="chip chip--1 v-loft"><span>Лофт</span></div>
+      <div class="chip chip--2 v-cyclorama" style="color:#15141a;"><span style="color:#fff;">Циклорама</span></div>
+      <div class="chip chip--3 v-vintage"><span>Винтаж</span></div>
+      <div class="chip chip--4 v-industrial"><span>Индастриал</span></div>
+      <div class="chip chip--5 v-neon"><span>Неон</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROOMS ============ -->
+<section id="rooms">
+  <div class="container">
+    <div class="section-head">
+      <h2>Залы</h2>
+      <p>Каждый зал — законченная декорация. Аренда включает базовый свет и часть реквизита, остальное — по запросу.</p>
+    </div>
+    <div class="rooms-grid">
+      <div class="room-card">
+        <div class="room-visual v-cyclorama"><b>90 м²</b></div>
+        <div class="room-body">
+          <h3>Циклорама</h3>
+          <div class="room-meta">от 2 400 ₽/час</div>
+          <p>Бесшовный белый фон, верхний радиус и тёплый пол — универсальный зал для предметной, портретной и рекламной съёмки.</p>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-visual v-industrial"><b>60 м²</b></div>
+        <div class="room-body">
+          <h3>Индастриал</h3>
+          <div class="room-meta">от 2 000 ₽/час</div>
+          <p>Бетон, металл и фактурные стены — для съёмок в жёстком, урбанистичном стиле.</p>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-visual v-dunes"><b>110 м²</b></div>
+        <div class="room-body">
+          <h3>Дюны</h3>
+          <div class="room-meta">от 2 800 ₽/час</div>
+          <p>Настоящий песок, мягкий рассеянный свет и глубина кадра — для проектов, где важна атмосфера.</p>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-visual v-neon"><b>54 м²</b></div>
+        <div class="room-body">
+          <h3>Неон</h3>
+          <div class="room-meta">от 2 100 ₽/час</div>
+          <p>Неоновая стена 5×3 м и RGB-подсветка под любой цвет — для клипов и динамичных серий.</p>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-visual v-loft"><b>120 м²</b></div>
+        <div class="room-body">
+          <h3>Лофт</h3>
+          <div class="room-meta">от 3 200 ₽/час</div>
+          <p>Просторный зал для команды, мероприятий и совместных продакшенов.</p>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-visual v-vintage"><b>75 м²</b></div>
+        <div class="room-body">
+          <h3>Винтаж</h3>
+          <div class="room-meta">от 2 200 ₽/час</div>
+          <p>Ретро-интерьер с историей и характером — для съёмок, которым нужен контекст.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EQUIPMENT ============ -->
+<section id="equipment">
+  <div class="container equip-wrap">
+    <div>
+      <div class="section-head" style="margin-bottom:24px;">
+        <h2>Оборудование входит в аренду</h2>
+        <p>Не нужно везти свет и стойки — студия уже оснащена. Дополнительный реквизит — по прайсу на месте.</p>
+      </div>
+      <a href="#booking" class="btn btn--outline">Уточнить список для вашего зала</a>
+    </div>
+    <div class="equip-list">
+      <div class="equip-item"><h4>Постоянный и импульсный свет</h4><p>Софтбоксы, стрипы, рефлекторы под любую задачу.</p></div>
+      <div class="equip-item"><h4>Дым-машина</h4><p>Уже в зале, доплачивать за подключение не нужно.</p></div>
+      <div class="equip-item"><h4>Циклорама с подогревом пола</h4><p>Комфортно даже для съёмок без одежды по сюжету.</p></div>
+      <div class="equip-item"><h4>Реквизит и фоны</h4><p>Меняются каждый сезон, часть — бесплатно.</p></div>
+      <div class="equip-item"><h4>Гримёрная зона</h4><p>Зеркало с подсветкой, утюжок, отпариватель.</p></div>
+      <div class="equip-item"><h4>Аренда объективов и стоек</h4><p>Если своей оптики не хватает на проект.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>Тарифы и абонементы</h2>
+      <p>Чем больше часов бронируете — тем ниже ставка. Статус закрепляется за номером телефона.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <h3>Разовая аренда</h3>
+        <div class="price-tag">от 1 800 ₽ <small>/ час</small></div>
+        <ul>
+          <li>Любой зал на выбор</li>
+          <li>Базовый свет включён</li>
+          <li>Оплата на месте или онлайн</li>
+        </ul>
+      </div>
+      <div class="price-card is-featured">
+        <h3>Абонемент на 10 часов</h3>
+        <div class="price-tag">−10% <small>к базовой ставке</small></div>
+        <ul>
+          <li>Часы сгорают через 3 месяца</li>
+          <li>Можно делить между залами</li>
+          <li>Перенос брони без штрафа</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <h3>Статус завсегдатая</h3>
+        <div class="price-tag">5–15% <small>накопительная скидка</small></div>
+        <ul>
+          <li>Бронза — от 10 часов в студии</li>
+          <li>Серебро — от 30 часов</li>
+          <li>Золото — от 50 часов</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="container">
+    <div class="section-head">
+      <h2>Дополнительные услуги</h2>
+      <p>Можно добавить к любой брони заранее или прямо на съёмке.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-chip"><h4>Макияж и укладка</h4><span>от 3 500 ₽</span></div>
+      <div class="service-chip"><h4>Подарочный сертификат</h4><span>любой номинал</span></div>
+      <div class="service-chip"><h4>Организация мероприятий</h4><span>от 4 000 ₽/час</span></div>
+      <div class="service-chip"><h4>Выездной комплект света</h4><span>по запросу</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-head">
+      <h2>Что говорят гости</h2>
+    </div>
+    <div class="quotes">
+      <div class="quote">
+        <p>Пришли впервые и сразу забронировали ещё на следующую неделю — атмосфера в зале «Дюны» того стоит.</p>
+        <footer>Аня, свадебный фотограф</footer>
+      </div>
+      <div class="quote">
+        <p>Удобно, что можно приехать поздно вечером и не зависеть от расписания администратора.</p>
+        <footer>Марк, видеограф</footer>
+      </div>
+      <div class="quote">
+        <p>Гримёрная и реквизит на месте решили половину моих обычных проблем с подготовкой к съёмке.</p>
+        <footer>Ольга, фэшн-фотограф</footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section class="booking" id="booking" style="border-bottom:none;">
+  <div class="container booking-wrap">
+    <div class="booking-info">
+      <h2>Забронировать зал</h2>
+      <p>Оставьте заявку — администратор свяжется в течение 15 минут и подтвердит удобное время.</p>
+      <div class="booking-contacts">
+        <div><b>Телефон:</b> +7 900 000-00-00</div>
+        <div><b>Адрес:</b> город, улица, дом 1</div>
+        <div><b>Часы работы:</b> ежедневно, 9:00–23:00</div>
+      </div>
+    </div>
+    <form class="form" onsubmit="return handleDemoForm(event)">
+      <input type="text" placeholder="Ваше имя" required>
+      <input type="tel" placeholder="Телефон" required>
+      <select required>
+        <option value="" disabled selected>Выберите зал</option>
+        <option>Циклорама</option>
+        <option>Индастриал</option>
+        <option>Дюны</option>
+        <option>Неон</option>
+        <option>Лофт</option>
+        <option>Винтаж</option>
+      </select>
+      <input type="date">
+      <button type="submit" class="btn btn--primary">Отправить заявку</button>
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="logo" style="margin-bottom:10px;">ФОКУС<span>.</span></div>
+        <p style="color:var(--text-muted); font-size:14px; max-width:26ch;">Фотостудия в центре города. Шесть залов, одна бронь.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <a href="#rooms">Залы</a>
+        <a href="#equipment">Оборудование</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#services">Услуги</a>
+      </div>
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <a href="tel:+79000000000">+7 900 000-00-00</a>
+        <a href="#">Telegram</a>
+        <a href="#">VK</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ФОКУС</span>
+      <span>Шаблон сайта для фотостудий · настраивается за пару минут</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ FAB ============ -->
+<button class="fab" onclick="openPanel()" aria-label="Настроить сайт" title="Настроить сайт">✎</button>
+
+<!-- ============ EDITOR PANEL ============ -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<aside class="panel" id="panel" aria-label="Панель настройки сайта">
+  <div class="panel-head">
+    <h3>Настройка сайта</h3>
+    <button class="panel-close" onclick="closePanel()" aria-label="Закрыть">×</button>
+  </div>
+  <div class="panel-body">
+
+    <div class="panel-section">
+      <h4>Тема</h4>
+      <div class="theme-toggle">
+        <button class="opt-btn is-active" data-theme-opt="dark" onclick="setTheme('dark',this)">Тёмная</button>
+        <button class="opt-btn" data-theme-opt="light" onclick="setTheme('light',this)">Светлая</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4>Акцентный цвет</h4>
+      <div class="swatches" id="swatches">
+        <button class="swatch is-active" style="background:#e8a33d" onclick="setAccent('#e8a33d', this)" aria-label="Золотой"></button>
+        <button class="swatch" style="background:#d9714e" onclick="setAccent('#d9714e', this)" aria-label="Терракотовый"></button>
+        <button class="swatch" style="background:#3ea39e" onclick="setAccent('#3ea39e', this)" aria-label="Бирюзовый"></button>
+        <button class="swatch" style="background:#8b7bd8" onclick="setAccent('#8b7bd8', this)" aria-label="Фиолетовый"></button>
+        <button class="swatch" style="background:#d66b8c" onclick="setAccent('#d66b8c', this)" aria-label="Розовый"></button>
+        <button class="swatch" style="background:#5fa8d3" onclick="setAccent('#5fa8d3', this)" aria-label="Голубой"></button>
+        <div class="swatch-custom">
+          <input type="color" id="customColor" value="#e8a33d" onchange="setAccent(this.value, null)" aria-label="Свой цвет">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4>Форма кнопок и карточек</h4>
+      <div class="shape-options">
+        <button class="shape-option" data-shape-opt="sharp" onclick="setShape('sharp',this)">
+          <span class="shape-preview" style="border-radius:2px;"></span> Острые углы
+        </button>
+        <button class="shape-option is-active" data-shape-opt="soft" onclick="setShape('soft',this)">
+          <span class="shape-preview" style="border-radius:8px;"></span> Мягкие
+        </button>
+        <button class="shape-option" data-shape-opt="pill" onclick="setShape('pill',this)">
+          <span class="shape-preview" style="border-radius:13px;"></span> Скруглённые
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4>Шрифтовая пара</h4>
+      <div class="font-options">
+        <button class="font-option is-active" data-font-opt="editorial" onclick="setFont('editorial',this)">
+          <span class="font-preview" style="font-family:'Instrument Serif',serif;">Aa</span> Editorial — Instrument Serif + Instrument Sans
+        </button>
+        <button class="font-option" data-font-opt="modern" onclick="setFont('modern',this)">
+          <span class="font-preview" style="font-family:'Bricolage Grotesque',sans-serif;">Aa</span> Modern — Bricolage Grotesque + Manrope
+        </button>
+        <button class="font-option" data-font-opt="classic" onclick="setFont('classic',this)">
+          <span class="font-preview" style="font-family:'Newsreader',serif;">Aa</span> Classic — Newsreader + Work Sans
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn--outline panel-reset" onclick="resetSettings()">Сбросить настройки</button>
+  </div>
+</aside>
+
+<script>
+const root = document.documentElement;
+
+function openPanel(){
+  document.getElementById('panel').classList.add('is-open');
+  document.getElementById('overlay').classList.add('is-open');
+}
+function closePanel(){
+  document.getElementById('panel').classList.remove('is-open');
+  document.getElementById('overlay').classList.remove('is-open');
+}
+
+function setActive(selector, el){
+  document.querySelectorAll(selector).forEach(n => n.classList.remove('is-active'));
+  if(el) el.classList.add('is-active');
+}
+
+function setTheme(mode, el){
+  root.setAttribute('data-theme', mode);
+  setActive('[data-theme-opt]', el);
+}
+
+function contrastColor(hex){
+  const r = parseInt(hex.substr(1,2),16), g = parseInt(hex.substr(3,2),16), b = parseInt(hex.substr(5,2),16);
+  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+  return lum > 0.6 ? '#15141a' : '#ffffff';
+}
+
+function setAccent(hex, el){
+  root.style.setProperty('--accent', hex);
+  root.style.setProperty('--accent-ink', contrastColor(hex));
+  document.getElementById('customColor').value = hex;
+  setActive('.swatch', el);
+}
+
+function setShape(mode, el){
+  root.setAttribute('data-shape', mode);
+  setActive('[data-shape-opt]', el);
+}
+
+function setFont(mode, el){
+  root.setAttribute('data-font', mode);
+  setActive('[data-font-opt]', el);
+}
+
+function resetSettings(){
+  root.setAttribute('data-theme','dark');
+  root.setAttribute('data-shape','soft');
+  root.setAttribute('data-font','editorial');
+  root.style.removeProperty('--accent');
+  root.style.removeProperty('--accent-ink');
+  setActive('[data-theme-opt]', document.querySelector('[data-theme-opt="dark"]'));
+  setActive('[data-shape-opt]', document.querySelector('[data-shape-opt="soft"]'));
+  setActive('[data-font-opt]', document.querySelector('[data-font-opt="editorial"]'));
+  setActive('.swatch', document.querySelector('.swatch'));
+  document.getElementById('customColor').value = '#e8a33d';
+}
+
+function handleDemoForm(e){
+  e.preventDefault();
+  document.getElementById('formMsg').textContent = 'Заявка отправлена (демо-форма, без реальной отправки).';
+  e.target.reset();
+  return false;
+}
+</script>
+</body>
+</html>
